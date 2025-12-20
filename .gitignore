@@ -15,3 +15,5 @@ out/
 
 # k6 results
 *.json
+# allow api test payloads
+!api-tests/**/*.json

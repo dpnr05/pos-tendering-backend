@@ -1,0 +1,14 @@
+{
+  "tenders": [
+    {
+      "transactionId": "TXN-20001",
+      "amount": 100.00,
+      "tenderType": "CREDIT"
+    },
+    {
+      "transactionId": "TXN-20002",
+      "amount": 50.75,
+      "tenderType": "GIFT_CARD"
+    }
+  ]
+}
