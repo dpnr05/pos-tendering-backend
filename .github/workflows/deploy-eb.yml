@@ -25,15 +25,13 @@ jobs:
       - name: Build application with Gradle
         run: ./gradlew clean build -x test
 
-      # 🔍 DEBUG: confirm jar names
-      - name: Verify JAR exists
+      - name: Verify JAR exists (DEBUG)
         run: ls -l build/libs
 
-      # ✅ FIXED STEP
       - name: Prepare deployment bundle
         run: |
           mkdir -p deploy
-          cp build/libs/*SNAPSHOT.jar deploy/application.jar
+          cp build/libs/*-SNAPSHOT.jar deploy/application.jar
           cp Procfile deploy/
           zip -r deploy.zip deploy
 
