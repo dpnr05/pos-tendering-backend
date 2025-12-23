@@ -27,7 +27,7 @@ jobs:
 
       - name: Prepare deployment bundle
         run: |
-          mkdir deploy
+          mkdir -p deploy
           cp build/libs/*.jar deploy/application.jar
           cp Procfile deploy/
           zip -r deploy.zip deploy
