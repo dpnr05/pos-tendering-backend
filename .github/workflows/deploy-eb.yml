@@ -25,14 +25,15 @@ jobs:
       - name: Build application with Gradle
         run: ./gradlew clean build -x test
 
-      # 🔍 DEBUG (VERY IMPORTANT – keep this once)
+      # 🔍 DEBUG: confirm jar names
       - name: Verify JAR exists
         run: ls -l build/libs
 
+      # ✅ FIXED STEP
       - name: Prepare deployment bundle
         run: |
           mkdir -p deploy
-          cp build/libs/*.jar deploy/application.jar
+          cp build/libs/*SNAPSHOT.jar deploy/application.jar
           cp Procfile deploy/
           zip -r deploy.zip deploy
 
@@ -45,7 +46,8 @@ jobs:
 
       - name: Upload bundle to S3
         run: |
-          aws s3 cp deploy.zip s3://${{ secrets.S3_BUCKET }}/application-${{ github.sha }}.zip
+          aws s3 cp deploy.zip \
+            s3://${{ secrets.S3_BUCKET }}/application-${{ github.sha }}.zip
 
       - name: Deploy to Elastic Beanstalk
         run: |
