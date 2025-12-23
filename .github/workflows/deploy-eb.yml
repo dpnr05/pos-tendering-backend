@@ -25,7 +25,8 @@ jobs:
       - name: Build application with Gradle
         run: ./gradlew clean build -x test
 
-      - name: Verify JAR exists (DEBUG)
+      # 🔍 DEBUG (VERY IMPORTANT – keep this once)
+      - name: Verify JAR exists
         run: ls -l build/libs
 
       - name: Prepare deployment bundle
@@ -43,7 +44,8 @@ jobs:
           aws-region: ${{ secrets.AWS_REGION }}
 
       - name: Upload bundle to S3
-        run: aws s3 cp deploy.zip s3://${{ secrets.S3_BUCKET }}/application-${{ github.sha }}.zip
+        run: |
+          aws s3 cp deploy.zip s3://${{ secrets.S3_BUCKET }}/application-${{ github.sha }}.zip
 
       - name: Deploy to Elastic Beanstalk
         run: |
