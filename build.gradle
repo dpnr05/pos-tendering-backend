@@ -46,6 +46,10 @@ dependencies {
 	testImplementation 'org.spockframework:spock-spring:2.4-M1-groovy-4.0'
 }
 
+//bootRun {
+//	systemProperty "server.port", System.getenv("PORT")
+//}
+
 tasks.named('test') {
 	useJUnitPlatform()
 }
