@@ -10,39 +10,37 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Checkout code
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # 2. Java setup
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: 17
 
-      # 3. Build
       - name: Grant execute permission for Gradle
         run: chmod +x gradlew
 
-      - name: Build application
+      - name: Build application with Gradle
         run: ./gradlew clean build -x test
 
-      # 4. Verify JAR
-      - name: Verify JAR exists
-        run: ls -l build/libs
+      - name: DEBUG – list generated JARs
+        run: |
+          echo "=== build/libs ==="
+          ls -lh build/libs
 
-      # 5. Prepare EB bundle
       - name: Prepare deployment bundle
         run: |
           mkdir -p deploy
-          cp build/libs/*-SNAPSHOT.jar deploy/application.jar
+          JAR_FILE=$(ls build/libs/*-SNAPSHOT.jar | head -n 1)
+          echo "Using JAR: $JAR_FILE"
+          cp "$JAR_FILE" deploy/application.jar
           cp Procfile deploy/
-          cd deploy
-          zip -r ../deploy.zip .
-          cd ..
+          zip -r deploy.zip deploy
+          echo "=== ZIP CONTENT ==="
+          unzip -l deploy.zip
 
-      # 6. AWS credentials
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -50,13 +48,16 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
-      # 7. Upload to S3 (CRITICAL FIX)
+      - name: DEBUG – verify S3 bucket
+        run: |
+          echo "Checking bucket: ${{ secrets.S3_BUCKET }}"
+          aws s3 ls
+
       - name: Upload bundle to S3
         run: |
           aws s3 cp deploy.zip \
-            "s3://${{ secrets.S3_BUCKET }}/application-${{ github.sha }}.zip"
+            s3://${{ secrets.S3_BUCKET }}/application-${{ github.sha }}.zip
 
-      # 8. Deploy to Elastic Beanstalk
       - name: Deploy to Elastic Beanstalk
         run: |
           aws elasticbeanstalk create-application-version \
