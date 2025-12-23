@@ -25,13 +25,12 @@ jobs:
       - name: Build application with Gradle
         run: ./gradlew clean build -x test
 
-      - name: Zip application
+      - name: Prepare deployment bundle
         run: |
           mkdir deploy
           cp build/libs/*.jar deploy/application.jar
           cp Procfile deploy/
           zip -r deploy.zip deploy
-          
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
@@ -43,14 +42,14 @@ jobs:
       - name: Upload bundle to S3
         run: |
           aws s3 cp deploy.zip \
-            s3://${{ secrets.S3_BUCKET }}/application-${{ github.sha }}.zip
+            s3://${{ secrets.S3_BUCKET }}/deploy-${{ github.sha }}.zip
 
       - name: Deploy to Elastic Beanstalk
         run: |
           aws elasticbeanstalk create-application-version \
             --application-name "${{ secrets.EB_APPLICATION_NAME }}" \
             --version-label "${{ github.sha }}" \
-            --source-bundle S3Bucket="${{ secrets.S3_BUCKET }}",S3Key="application-${{ github.sha }}.zip"
+            --source-bundle S3Bucket="${{ secrets.S3_BUCKET }}",S3Key="deploy-${{ github.sha }}.zip"
 
           aws elasticbeanstalk update-environment \
             --environment-name "${{ secrets.EB_ENVIRONMENT_NAME }}" \
