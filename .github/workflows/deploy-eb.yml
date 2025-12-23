@@ -25,21 +25,13 @@ jobs:
       - name: Build application with Gradle
         run: ./gradlew clean build -x test
 
-      - name: DEBUG – list generated JARs
-        run: |
-          echo "=== build/libs ==="
-          ls -lh build/libs
-
       - name: Prepare deployment bundle
         run: |
           mkdir -p deploy
           JAR_FILE=$(ls build/libs/*-SNAPSHOT.jar | head -n 1)
-          echo "Using JAR: $JAR_FILE"
           cp "$JAR_FILE" deploy/application.jar
           cp Procfile deploy/
           zip -r deploy.zip deploy
-          echo "=== ZIP CONTENT ==="
-          unzip -l deploy.zip
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
@@ -48,11 +40,6 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
-      - name: DEBUG – verify S3 bucket
-        run: |
-          echo "Checking bucket: ${{ secrets.S3_BUCKET }}"
-          aws s3 ls
-
       - name: Upload bundle to S3
         run: |
           aws s3 cp deploy.zip \
@@ -60,11 +47,13 @@ jobs:
 
       - name: Deploy to Elastic Beanstalk
         run: |
+          VERSION_LABEL="v-${{ github.run_number }}"
+
           aws elasticbeanstalk create-application-version \
             --application-name "${{ secrets.EB_APPLICATION_NAME }}" \
-            --version-label "${{ github.sha }}" \
+            --version-label "$VERSION_LABEL" \
             --source-bundle S3Bucket="${{ secrets.S3_BUCKET }}",S3Key="application-${{ github.sha }}.zip"
-          
+
           aws elasticbeanstalk update-environment \
             --environment-name "${{ secrets.EB_ENVIRONMENT_NAME }}" \
-            --version-label "${{ github.sha }}"
+            --version-label "$VERSION_LABEL"
