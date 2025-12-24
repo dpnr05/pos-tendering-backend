@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      VERSION_LABEL: v1-${{ github.run_number }}
+      VERSION_LABEL: v2-${{ github.run_number }}
 
     steps:
       - name: Checkout code
@@ -31,7 +31,8 @@ jobs:
       - name: Prepare deployment bundle
         run: |
           mkdir -p deploy
-          JAR_FILE=$(ls build/libs/*-SNAPSHOT.jar | head -n 1)
+          JAR_FILE=$(ls build/libs/*.jar | grep -v plain | head -n 1)
+          echo "Using JAR: $JAR_FILE"
           cp "$JAR_FILE" deploy/application.jar
           cp Procfile deploy/
           zip -r deploy.zip deploy
@@ -53,7 +54,8 @@ jobs:
           aws elasticbeanstalk create-application-version \
             --application-name "${{ secrets.EB_APPLICATION_NAME }}" \
             --version-label "${{ env.VERSION_LABEL }}" \
-            --source-bundle S3Bucket="${{ secrets.S3_BUCKET }}",S3Key="application-${{ env.VERSION_LABEL }}.zip"
+            --source-bundle S3Bucket="${{ secrets.S3_BUCKET }}",S3Key="application-${{ env.VERSION_LABEL }}.zip" \
+            --auto-create-application
 
       - name: Deploy to Elastic Beanstalk
         run: |
