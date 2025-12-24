@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 import reactor.core.publisher.Flux;
 
+@CrossOrigin(origins = "http://localhost:5173/")
 @RestController
 @RequestMapping("/api/pos/tenders")
 @RequiredArgsConstructor
