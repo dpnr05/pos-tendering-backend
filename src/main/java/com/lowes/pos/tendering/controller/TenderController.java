@@ -9,8 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 import reactor.core.publisher.Flux;
-
-@CrossOrigin(origins = "http://localhost:5173/")
+@CrossOrigin(origins = {"http://localhost:5173/"},allowedHeaders = "*",methods = {RequestMethod.GET,RequestMethod.POST})
 @RestController
 @RequestMapping("/api/pos/tenders")
 @RequiredArgsConstructor
