@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      VERSION_LABEL: v2-${{ github.run_number }}
+      VERSION_LABEL: v-${{ github.run_number }}
 
     steps:
       - name: Checkout code
@@ -28,14 +28,11 @@ jobs:
       - name: Build application
         run: ./gradlew clean build -x test
 
-      - name: Prepare deployment bundle
+      - name: Prepare deployment bundle (EB compatible)
         run: |
-          mkdir -p deploy
-          JAR_FILE=$(ls build/libs/*.jar | grep -v plain | head -n 1)
-          echo "Using JAR: $JAR_FILE"
-          cp "$JAR_FILE" deploy/application.jar
-          cp Procfile deploy/
-          zip -r deploy.zip deploy
+          JAR_FILE=$(ls build/libs/*-SNAPSHOT.jar | head -n 1)
+          cp "$JAR_FILE" application.jar
+          zip deploy.zip application.jar Procfile
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
@@ -54,8 +51,7 @@ jobs:
           aws elasticbeanstalk create-application-version \
             --application-name "${{ secrets.EB_APPLICATION_NAME }}" \
             --version-label "${{ env.VERSION_LABEL }}" \
-            --source-bundle S3Bucket="${{ secrets.S3_BUCKET }}",S3Key="application-${{ env.VERSION_LABEL }}.zip" \
-            --auto-create-application
+            --source-bundle S3Bucket="${{ secrets.S3_BUCKET }}",S3Key="application-${{ env.VERSION_LABEL }}.zip"
 
       - name: Deploy to Elastic Beanstalk
         run: |
