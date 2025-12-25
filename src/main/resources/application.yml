@@ -11,4 +11,7 @@ management:
       exposure:
         include: health,info,prometheus
 
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
 
