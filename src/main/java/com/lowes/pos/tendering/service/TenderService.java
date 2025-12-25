@@ -1,55 +1,28 @@
 package com.lowes.pos.tendering.service;
 
-import com.lowes.pos.tendering.model.SplitTenderRequest;
+import com.lowes.pos.tendering.entity.Tender;
 import com.lowes.pos.tendering.model.TenderRequest;
-import com.lowes.pos.tendering.model.TenderResponse;
-import jakarta.annotation.PreDestroy;
-import lombok.extern.slf4j.Slf4j;
+import com.lowes.pos.tendering.repository.TenderRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.util.Optional;
+import java.time.LocalDateTime;
+import java.util.UUID;
 
-@Slf4j
 @Service
+@RequiredArgsConstructor
 public class TenderService {
 
-    public Mono<TenderResponse> processTender(TenderRequest request) {
-        log.info("Processing tender request | transactionId={} | amount={} | tenderType={}",
-                request.getTransactionId(),
-                request.getAmount(),
-                request.getTenderType());
+    private final TenderRepository tenderRepository;
 
-        return Mono.just(request)
-                .flatMap(this::authorizePayment)
-                .map(req -> {
-                    log.info("Tender approved | transactionId={}", req.getTransactionId());
-                    return new TenderResponse(req.getTransactionId(), "APPROVED");
-                })
-                .onErrorResume(ex -> {
-                    log.error("Tender declined | transactionId={}", request.getTransactionId(), ex);
-                    return Mono.just(new TenderResponse(request.getTransactionId(), "DECLINED"));
-                });
-    }
+    public Mono<Tender> createTender(TenderRequest request) {
+        Tender tender = new Tender();
+        tender.setTenderType(request.getTenderType().name());
+        tender.setAmount(request.getAmount());
+        tender.setTransactionId(request.getTransactionId());
+        tender.setCreatedAt(LocalDateTime.now());
 
-    private Mono<TenderRequest> authorizePayment(TenderRequest request) {
-        log.debug("Authorizing payment | transactionId={}", request.getTransactionId());
-        return Mono.just(request);
-    }
-
-    public Flux<TenderResponse> processSplitTender(SplitTenderRequest request) {
-        Optional<TenderRequest> primary =
-                request.getTenders().stream().findFirst();
-
-        return Flux.fromIterable(request.getTenders())
-                .flatMap(this::authorizePayment)
-                .map(t -> new TenderResponse(t.getTransactionId(), "APPROVED"));
-    }
-
-    // ✅ CLEAN SHUTDOWN HOOK
-    @PreDestroy
-    public void shutdown() {
-        log.info("Gracefully shutting down Tendering Service");
+        return tenderRepository.save(tender);
     }
 }

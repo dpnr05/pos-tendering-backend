@@ -4,14 +4,27 @@ server:
 spring:
   application:
     name: pos-tendering-backend
+  r2dbc:
+    url: r2dbc:mysql://localhost:3306/IntellijIdea
+    username: root
+    password: test1234
+  sql:
+    init:
+      mode: always
+
+logging:
+ level:
+  org.springframework.r2dbc: DEBUG
 
 management:
   endpoints:
     web:
       exposure:
-        include: health,info,prometheus
+        include:
+          - health
+          - info
+          - prometheus
 
 springdoc:
   swagger-ui:
     path: /swagger-ui.html
-

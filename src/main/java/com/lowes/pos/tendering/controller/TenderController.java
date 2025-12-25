@@ -1,15 +1,14 @@
 package com.lowes.pos.tendering.controller;
 
-import com.lowes.pos.tendering.model.SplitTenderRequest;
 import com.lowes.pos.tendering.model.TenderRequest;
-import com.lowes.pos.tendering.model.TenderResponse;
 import com.lowes.pos.tendering.service.TenderService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
-import reactor.core.publisher.Flux;
-@CrossOrigin(origins = {"http://localhost:5173/"},allowedHeaders = "*",methods = {RequestMethod.GET,RequestMethod.POST})
+
+import java.util.UUID;
+
 @RestController
 @RequestMapping("/api/pos/tenders")
 @RequiredArgsConstructor
@@ -18,14 +17,10 @@ public class TenderController {
     private final TenderService tenderService;
 
     @PostMapping
-    public Mono<TenderResponse> processTender(@Valid @RequestBody TenderRequest request) {
-        return tenderService.processTender(request);
-    }
-    @PostMapping("/split")
-    public Flux<TenderResponse> processSplitTender(
-            @Valid @RequestBody SplitTenderRequest request) {
-        return tenderService.processSplitTender(request);
+    public Mono<?> createTender(@Valid @RequestBody TenderRequest request) {
+        request.setTransactionId(UUID.randomUUID().toString());
+        return tenderService.createTender(request);
     }
 
-    }
 
+}
