@@ -9,11 +9,11 @@ import org.springframework.context.annotation.Configuration;
 public class SwaggerConfig {
 
     @Bean
-    public OpenAPI customOpenAPI() {
+    public OpenAPI openAPI() {
         return new OpenAPI()
                 .info(new Info()
                         .title("POS Tendering API")
                         .version("1.0")
-                        .description("API documentation for POS Tendering Backend"));
+                        .description("Reactive POS Tendering Service"));
     }
 }
