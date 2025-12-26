@@ -1,14 +1,17 @@
 package com.lowes.pos.tendering.entity;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.relational.core.mapping.Table;
+
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+@Entity
 @Data
-@Table("tender")
+@Table(name = "tender")
 public class Tender {
 
     @Id
