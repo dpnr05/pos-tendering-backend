@@ -20,42 +20,55 @@ repositories {
 
 dependencies {
 
-	// Spring WebFlux (Reactive)
+	// =========================
+	// 🌐 Reactive Web
+	// =========================
 	implementation 'org.springframework.boot:spring-boot-starter-webflux'
 
-	// Validation
-	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	// =========================
+	// 🗄️ Reactive Database (REQUIRED)
+	// =========================
+	implementation 'org.springframework.boot:spring-boot-starter-data-r2dbc'
+	implementation 'dev.miku:r2dbc-mysql:0.8.2.RELEASE'
 
-	// Actuator
-	implementation 'org.springframework.boot:spring-boot-starter-actuator'
-
-	// Prometheus
-	implementation 'io.micrometer:micrometer-registry-prometheus'
-
-	// Lombok
-	compileOnly 'org.projectlombok:lombok'
-	annotationProcessor 'org.projectlombok:lombok'
-    //logback
-	implementation 'net.logstash.logback:logstash-logback-encoder:7.4'
-    //swager
-	implementation 'org.springdoc:springdoc-openapi-starter-webflux-ui:2.5.0'
-
-	// JPA (needed for MySQL persistence)
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-
-	// ✅ MySQL Connector (CORRECT)
+	// JDBC driver ONLY for schema init / tools
 	runtimeOnly 'com.mysql:mysql-connector-j:8.3.0'
 
-	// Testing
+	// =========================
+	// ✅ Validation
+	// =========================
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+	// =========================
+	// 📊 Actuator + Metrics
+	// =========================
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+	implementation 'io.micrometer:micrometer-registry-prometheus'
+
+	// =========================
+	// 📜 Logging
+	// =========================
+	implementation 'net.logstash.logback:logstash-logback-encoder:7.4'
+
+	// =========================
+	// 📘 Swagger (WebFlux)
+	// =========================
+	implementation 'org.springdoc:springdoc-openapi-starter-webflux-ui:2.5.0'
+
+	// =========================
+	// 🧬 Lombok
+	// =========================
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+
+	// =========================
+	// 🧪 Testing
+	// =========================
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'io.projectreactor:reactor-test'
 	testImplementation 'org.spockframework:spock-core:2.4-M1-groovy-4.0'
 	testImplementation 'org.spockframework:spock-spring:2.4-M1-groovy-4.0'
 }
-
-//bootRun {
-//	systemProperty "server.port", System.getenv("PORT")
-//}
 
 tasks.named('test') {
 	useJUnitPlatform()

@@ -1,28 +1,34 @@
 package com.lowes.pos.tendering.service;
-
 import com.lowes.pos.tendering.entity.Tender;
+import com.lowes.pos.tendering.model.SplitTenderRequest;
 import com.lowes.pos.tendering.model.TenderRequest;
+import com.lowes.pos.tendering.model.TenderResponse;
 import com.lowes.pos.tendering.repository.TenderRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
-import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class TenderService {
 
-    private final TenderRepository tenderRepository;
+    private final TenderRepository repository;
 
-    public Mono<Tender> createTender(TenderRequest request) {
-        Tender tender = new Tender();
-        tender.setTenderType(request.getTenderType().name());
+    public Mono<TenderResponse> create(TenderRequest request) {
+        Tender tender = new Tender();   // ✅ default constructor
+        tender.setTenderType(request.getTenderType());
         tender.setAmount(request.getAmount());
-        tender.setTransactionId(request.getTransactionId());
-        tender.setCreatedAt(LocalDateTime.now());
+        return repository.save(tender)
+                .map(t -> new TenderResponse(
+                        t.getId(),
+                        t.getTenderType(),
+                        t.getAmount()
+                ));
+    }
 
-        return tenderRepository.save(tender);
+    public Flux<TenderResponse> createSplit(SplitTenderRequest request) {
+        return Flux.fromIterable(request.getTenders())
+                .flatMap(this::create);
     }
 }
