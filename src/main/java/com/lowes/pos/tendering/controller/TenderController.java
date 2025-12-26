@@ -4,13 +4,10 @@ import com.lowes.pos.tendering.model.TenderRequest;
 import com.lowes.pos.tendering.model.TenderResponse;
 import com.lowes.pos.tendering.service.TenderService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
+@CrossOrigin(origins = "http://localhost:5173")
 @RestController
 @RequestMapping("/api/tenders")
 @RequiredArgsConstructor
