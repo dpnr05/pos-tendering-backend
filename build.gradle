@@ -40,11 +40,11 @@ dependencies {
     //swager
 	implementation 'org.springdoc:springdoc-openapi-starter-webflux-ui:2.5.0'
 
-	// ✅ R2DBC MySQL
-	implementation 'org.springframework.boot:spring-boot-starter-data-r2dbc'
-	implementation 'io.asyncer:r2dbc-mysql:1.0.5'
-	// MySQL driver (for schema/init tools)
-	runtimeOnly 'mysql:mysql-connector-j'
+	// JPA (needed for MySQL persistence)
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+	// ✅ MySQL Connector (CORRECT)
+	runtimeOnly 'com.mysql:mysql-connector-j:8.3.0'
 
 	// Testing
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
