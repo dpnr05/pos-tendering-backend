@@ -1,3 +1,5 @@
+server:
+  port: 5000
 spring:
   r2dbc:
     url: r2dbc:mysql://database-1.cenuwwy4uaqh.us-east-1.rds.amazonaws.com:3306/IntellijIdea
