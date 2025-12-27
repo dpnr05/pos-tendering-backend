@@ -11,4 +11,5 @@ public class TenderResponse {
     private Long id;
     private TenderType tenderType;
     private BigDecimal amount;
+    private String transactionId;
 }

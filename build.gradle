@@ -23,13 +23,16 @@ dependencies {
 	// =========================
 	// 🌐 Reactive Web
 	// =========================
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-webflux'
 
-
+	// =========================
+	// 🗄️ Reactive Database (REQUIRED)
+	// =========================
+	implementation 'org.springframework.boot:spring-boot-starter-data-r2dbc'
+	implementation 'dev.miku:r2dbc-mysql:0.8.2.RELEASE'
 
 	// JDBC driver ONLY for schema init / tools
-	runtimeOnly 'com.mysql:mysql-connector-j'
+	runtimeOnly 'com.mysql:mysql-connector-j:8.3.0'
 
 	// =========================
 	// ✅ Validation

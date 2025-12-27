@@ -1,21 +1,20 @@
 package com.lowes.pos.tendering.entity;
 
 import com.lowes.pos.tendering.model.TenderType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
-
+import org.springframework.data.relational.core.mapping.Column;
+import org.springframework.data.relational.core.mapping.Table;
 
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-@Entity
+
 @Data
-@Table(name = "tender")
+@Table(name = "tenders")
 @NoArgsConstructor
 @AllArgsConstructor
 public class Tender {
@@ -25,6 +24,7 @@ public class Tender {
 
     private TenderType tenderType;
     private BigDecimal amount;
+    @Column("transaction_id")
     private String transactionId;
-    private LocalDateTime createdAt;
+
 }

@@ -19,11 +19,13 @@ public class TenderService {
         Tender tender = new Tender();   // ✅ default constructor
         tender.setTenderType(request.getTenderType());
         tender.setAmount(request.getAmount());
+        tender.setTransactionId(request.getTransactionId());
         return repository.save(tender)
                 .map(t -> new TenderResponse(
                         t.getId(),
                         t.getTenderType(),
-                        t.getAmount()
+                        t.getAmount(),
+                        t.getTransactionId()
                 ));
     }
 

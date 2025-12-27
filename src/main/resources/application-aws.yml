@@ -1,5 +1,14 @@
 spring:
-  jpa:
-    hibernate:
-      ddl-auto: none
-    show-sql: false
+  r2dbc:
+    url: r2dbc:mysql://database-1.cenuwwy4uaqh.us-east-1.rds.amazonaws.com:3306/IntellijIdea
+    username: admin
+    password: test1234
+
+  sql:
+    init:
+      mode: never
+
+logging:
+  level:
+    org.springframework.r2dbc: INFO
+    io.r2dbc.mysql: INFO
