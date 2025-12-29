@@ -2,7 +2,7 @@ server:
   port: 5000
 spring:
   r2dbc:
-    url: r2dbc:mysql://database-1.cenuwwy4uaqh.us-east-1.rds.amazonaws.com:3306/IntellijIdea
+    url: r2dbc:mysql://pos-tendering-db.cpymyqaiwd9e.us-east-2.rds.amazonaws.com:3306/IntellijIdea
     username: admin
     password: test1234
 
