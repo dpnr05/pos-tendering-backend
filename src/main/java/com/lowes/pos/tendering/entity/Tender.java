@@ -21,8 +21,8 @@ public class Tender {
 
     @Id
     private Long id;
-
-    private TenderType tenderType;
+    @Column("tender_type")
+    private String tenderType;
     private BigDecimal amount;
     @Column("transaction_id")
     private String transactionId;

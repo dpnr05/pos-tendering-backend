@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 public class TenderResponse {
     private Long id;
-    private TenderType tenderType;
+    private String tenderType;
     private BigDecimal amount;
     private String transactionId;
 }
