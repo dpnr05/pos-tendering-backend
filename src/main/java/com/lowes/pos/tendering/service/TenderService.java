@@ -17,7 +17,7 @@ public class TenderService {
 
     public Mono<TenderResponse> create(TenderRequest request) {
         Tender tender = new Tender();   // ✅ default constructor
-        tender.setTenderType(request.getTenderType().name());
+        tender.setTenderType(request.getTenderType());
         tender.setAmount(request.getAmount());
         tender.setTransactionId(request.getTransactionId());
         return repository.save(tender)

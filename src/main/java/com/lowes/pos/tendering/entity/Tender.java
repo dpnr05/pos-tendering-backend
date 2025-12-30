@@ -22,7 +22,7 @@ public class Tender {
     @Id
     private Long id;
     @Column("tender_type")
-    private String tenderType;
+    private TenderType tenderType;
     private BigDecimal amount;
     @Column("transaction_id")
     private String transactionId;
